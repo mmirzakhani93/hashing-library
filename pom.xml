@@ -10,6 +10,7 @@
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>The hashing-library provides a utility for generating hash values for objects based on annotated fields. It processes object hierarchies, collections, and nested objects, allowing you to compute consistent hash values for complex data structures.</description>
+    <url>https://github.com/mmirzakhani93/hashing-library</url>
 
     <licenses>
         <license>
@@ -53,6 +54,32 @@
 
     <build>
         <plugins>
+            <!-- Javadoc Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Sources Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
