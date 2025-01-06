@@ -22,12 +22,28 @@ The `HashingUtils` library provides a utility for generating hash values for obj
 
 To include this library in your project, copy the `HashingUtils` class and ensure you have the required dependencies (such as Jackson). You can add the following Maven dependency for Jackson in your `pom.xml`:
 
+### Maven
+
+Add the following dependency to your `pom.xml`:
+
 ```xml
 <dependency>
     <groupId>io.github.mmirzakhani93</groupId>
     <artifactId>hashing-library</artifactId>
     <version>1.0.0</version> <!-- Use the latest version -->
 </dependency>
+```
+
+### Gradle
+
+If you are using Gradle, add the following to your `build.gradle` file:
+
+#### For Groovy DSL:
+
+```gradle
+dependencies {
+    implementation group: 'io.github.mmirzakhani93', name: 'hashing-library', version: '1.0.0'
+}
 ```
 
 ---
