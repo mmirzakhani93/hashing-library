@@ -11,6 +11,7 @@ The `HashingUtils` library provides a utility for generating hash values for obj
 - **Field Sorting:** Sorts fields based on the `@HashableField(order)` value to ensure order-independent hashing.
 
 ---
+---
 
 ## Requirements
 
@@ -79,7 +80,7 @@ Here, only the `name`, `age`, and `address` fields will be considered in the has
 
 ### 2. Hash an Object
 
-Use the `HashingUtils` library to compute the hash of an object. You need to provide an object with annotated fields and specify a hashing algorithm (e.g., `SHA-256` or `MD5`).
+Use the `HashingUtils` library to compute the hash of an object. You need to provide an object with annotated fields and specify a hashing algorithm (e.g., `SHA-256`).
 
 **Example:**
 

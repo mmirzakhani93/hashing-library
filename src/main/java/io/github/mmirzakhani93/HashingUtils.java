@@ -21,7 +21,24 @@ import java.util.stream.Collectors;
  * The primary purpose of this utility is to standardize the creation of hash values for objects
  * where only specific, annotated fields contribute to the hashing process.
  */
-public class HashingUtils {
+public final class HashingUtils {
+
+    /**
+     * This class cannot be instantiated.
+     */
+    private HashingUtils() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
+    /**
+     * The default hash algorithm used in the application for generating hash values.
+     * This is set to {@code HashAlgorithm.SHA256}, representing the SHA-256 algorithm.
+     *
+     * This constant is primarily utilized by methods within the {@code HashingUtils} class
+     * that perform hashing operations without explicitly requiring an algorithm to be passed.
+     * It ensures a consistent and predefined choice of hashing algorithm throughout the system.
+     */
+    public static final HashAlgorithm DEFAULT_ALGORITHM = HashAlgorithm.SHA256;
 
     /**
      * A static and immutable set of classes representing the types
@@ -50,21 +67,21 @@ public class HashingUtils {
     }
 
     /**
-     * Computes a hash value for the given object using the specified algorithm.
-     * Only the fields annotated with {@code @HashableField} are included in the hash computation.
-     * The resulting hash value is returned as a Base64-encoded string.
+     * Generates a Base64-encoded hash string for the given object using the specified hash algorithm.
+     * Only fields annotated with {@code @HashableField} in the object are included in the hash
+     * computation. Nested objects and collections are recursively processed to include their
+     * hashable fields.
      *
-     * @param object The object to be hashed. Must not be null. Only fields annotated with {@code @HashableField}
-     *               are considered during the hashing process. Nested objects and collections
-     *               are processed recursively to include their hashable fields.
-     * @param algorithm The name of the hash algorithm to use (e.g., "SHA-256", "MD5"). Must be a valid algorithm
-     *                  recognized by {@code java.security.MessageDigest}.
-     * @return A Base64-encoded string representing the hash value of the given object.
-     * @throws NoSuchAlgorithmException If the specified algorithm is not available in the environment.
-     * @throws JsonProcessingException If an error occurs during serialization of the object to JSON.
+     * @param <T> The type of the object to be hashed.
+     * @param object The object to be hashed. Must not be null, and should include fields annotated
+     *               with {@code @HashableField} to be considered in the hash computation.
+     * @param algorithm The hash algorithm to be used. Represented by an instance of {@code HashAlgorithm}.
+     * @return A Base64-encoded string representing the computed hash of the object.
+     * @throws NoSuchAlgorithmException If the specified hash algorithm is not supported.
+     * @throws JsonProcessingException If an error occurs during serialization of the object to a JSON string.
      * @throws IllegalAccessException If there is an issue accessing the fields of the provided object.
      */
-    public static String hashObject(Object object, HashAlgorithm algorithm)
+    public static <T> String hashObject(T object, HashAlgorithm algorithm)
             throws NoSuchAlgorithmException, JsonProcessingException, IllegalAccessException {
 
         // Create a MessageDigest instance for the specified hash algorithm
@@ -82,18 +99,51 @@ public class HashingUtils {
     }
 
     /**
-     * Extracts a map of hashable fields and their corresponding values from the given object.
-     * Only fields annotated with {@code @HashableField} are included in the resulting map.
-     * Nested objects and collections are recursively processed to extract their hashable fields.
+     * Generates a Base64-encoded hash string for the given object using the default hash algorithm.
+     * Only fields annotated with {@code @HashableField} in the object are included in the hash computation.
+     * Nested objects and collections are recursively processed to include their hashable fields.
      *
-     * @param obj The object to extract hashable fields from. Can be any object or null.
-     * @return A map containing the field names as keys and their corresponding values as map values.
-     *         If the object is null, an empty map is returned. Each key corresponds to a field
-     *         annotated with {@code @HashableField}, and if the value is a collection or nested object,
-     *         it is recursively processed.
+     * @param <T> The type of the object to be hashed.
+     * @param object The object to be hashed. Must not be null, and should include fields annotated
+     *               with {@code @HashableField} to be considered in the hash computation.
+     * @return A Base64-encoded string representing the computed hash of the object.
+     * @throws NoSuchAlgorithmException If the default hash algorithm is not supported.
+     * @throws JsonProcessingException If an error occurs during serialization of the object to a JSON string.
      * @throws IllegalAccessException If there is an issue accessing the fields of the provided object.
      */
-    private static Map<String, Object> extractHashableFields(Object obj) throws IllegalAccessException {
+    public static <T> String hashObject(T object)
+            throws NoSuchAlgorithmException, JsonProcessingException, IllegalAccessException {
+
+        return hashObject(object, DEFAULT_ALGORITHM);
+    }
+
+    /**
+     * Retrieves a set of strings representing the names of all supported hash algorithms.
+     * The returned set includes the algorithm names defined in the {@code HashAlgorithm} enumeration.
+     *
+     * @return A set containing the names of the supported hash algorithms.
+     */
+    public static Set<String> getSupportedAlgorithms() {
+
+        return Arrays.stream(HashAlgorithm.values())
+                .map(HashAlgorithm::toString)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Extracts all fields marked with the {@code @HashableField} annotation from the provided object and
+     * organizes them into a map. The method recursively processes nested objects and collections to include
+     * their hashable fields.
+     *
+     * @param <T> The type of the input object.
+     * @param obj The object from which to extract fields marked with {@code @HashableField}. If {@code null},
+     *            an empty map is returned.
+     * @return A map containing the field names annotated with {@code @HashableField} as keys and their
+     *         corresponding values as map entries. Nested objects and collections are recursively included.
+     * @throws IllegalAccessException If the method cannot access a field in the provided object due to
+     *                                access restrictions.
+     */
+    private static <T> Map<String, Object> extractHashableFields(T obj) throws IllegalAccessException {
 
         // If the object is null, return an empty map
         if (obj == null) {

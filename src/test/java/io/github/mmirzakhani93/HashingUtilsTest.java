@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -65,6 +66,40 @@ class HashingUtilsTest {
 
         // Act
         String hash = HashingUtils.hashObject(testObject, HashAlgorithm.SHA256);
+
+        // Assert
+        assertNotNull(hash);
+        assertFalse(hash.isEmpty());
+    }
+
+    /**
+     * Validates the `hashObject` method of the {@code HashingUtils} class by providing
+     * an object with valid annotated fields and verifying the resulting hash computation.
+     *
+     * This test ensures that the hashing utility correctly computes a hash for a valid
+     * object and produces a non-null, non-empty hash value.
+     *
+     * Test Details:
+     * - The test object contains annotated fields to be included in the hash computation.
+     * - A valid hashing algorithm is used (e.g., "SHA-256").
+     *
+     * Assertions:
+     * - The resulting hash string is not null.
+     * - The resulting hash string is not empty.
+     *
+     * @throws NoSuchAlgorithmException If the specified hashing algorithm is not available.
+     * @throws JsonProcessingException  If an error occurs during JSON serialization.
+     * @throws IllegalAccessException   If the object fields cannot be accessed during hash computation.
+     */
+    @Test
+    void testHashObjectWithValidObject()
+            throws NoSuchAlgorithmException, JsonProcessingException, IllegalAccessException {
+
+        // Arrange
+        TestObject testObject = new TestObject("John Doe", 30);
+
+        // Act
+        String hash = HashingUtils.hashObject(testObject);
 
         // Assert
         assertNotNull(hash);
@@ -195,5 +230,46 @@ class HashingUtilsTest {
         // Assert
         assertNotNull(hash);
         assertFalse(hash.isEmpty());
+    }
+
+    /**
+     * Tests that the {@code getSupportedAlgorithms} method in the {@code HashingUtils} class
+     * returns a non-empty set of supported algorithm names.
+     * <p>
+     * This test ensures that the set is not null, not empty, and contains at least
+     * one valid algorithm name. It validates that the implementation captures the available
+     * algorithms correctly.
+     */
+    @Test
+    void testGetSupportedAlgorithmsReturnsNonEmptySet() {
+
+        // Act
+        Set<String> supportedAlgorithms = HashingUtils.getSupportedAlgorithms();
+
+        // Assert
+        assertNotNull(supportedAlgorithms, "Supported algorithms set should not be null");
+        assertFalse(supportedAlgorithms.isEmpty(), "Supported algorithms set should not be empty");
+    }
+
+    /**
+     * Verifies that the {@code getSupportedAlgorithms} method includes the expected
+     * hashing algorithm names.
+     * <p>
+     * This test checks whether the set of supported algorithms includes specific
+     * algorithms (e.g., SHA-256, MD5) that are expected to be supported by the application.
+     */
+    @Test
+    void testGetSupportedAlgorithmsContainsExpectedAlgorithms() {
+
+        // Arrange
+        Set<String> expectedAlgorithms = Set.of(HashAlgorithm.SHA256.toString());
+
+        // Act
+        Set<String> supportedAlgorithms = HashingUtils.getSupportedAlgorithms();
+
+        // Assert
+        assertNotNull(supportedAlgorithms, "Supported algorithms set should not be null");
+        assertTrue(supportedAlgorithms.containsAll(expectedAlgorithms),
+                "Supported algorithms set should contain all expected algorithm names");
     }
 }

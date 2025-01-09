@@ -6,7 +6,7 @@
 
     <groupId>io.github.mmirzakhani93</groupId>
     <artifactId>hashing-library</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>The hashing-library provides a utility for generating hash values for objects based on annotated fields. It processes object hierarchies, collections, and nested objects, allowing you to compute consistent hash values for complex data structures.</description>
