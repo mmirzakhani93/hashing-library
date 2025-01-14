@@ -31,7 +31,7 @@ Add the following dependency to your `pom.xml`:
 <dependency>
     <groupId>io.github.mmirzakhani93</groupId>
     <artifactId>hashing-library</artifactId>
-    <version>1.0.0</version> <!-- Use the latest version -->
+    <version>1.1.0</version> <!-- Use the latest version -->
 </dependency>
 ```
 
@@ -43,7 +43,7 @@ If you are using Gradle, add the following to your `build.gradle` file:
 
 ```gradle
 dependencies {
-    implementation group: 'io.github.mmirzakhani93', name: 'hashing-library', version: '1.0.0'
+    implementation group: 'io.github.mmirzakhani93', name: 'hashing-library', version: '1.1.0'
 }
 ```
 
